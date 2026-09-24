@@ -1,0 +1,122 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-wrapper page-content bg-white">
+
+  <div class="container py-4">
+    <h2 class="text-center mb-4 fw-bold" style="color: var(--cor-primaria);">Dashboard de Aprendizado</h2>
+
+    <!-- BLOQUEIO PARA VISITANTE -->
+    <div *ngIf="isGuest" class="row justify-content-center mb-5">
+      <div class="col-md-9 col-lg-8">
+        <div class="card border-0 shadow-sm text-center p-4 p-md-5 bg-light">
+          <div class="mb-3">
+            <span class="d-inline-flex p-3 rounded-circle bg-warning bg-opacity-25 text-warning">
+              <i class="bi bi-graph-up-arrow display-5 text-dark"></i>
+            </span>
+          </div>
+          <h4 class="fw-bold mb-2 text-dark">Painel de Desempenho Pessoal Bloqueado</h4>
+          <p class="text-muted small mb-4">
+            Você está navegando em <strong>Modo Visitante</strong>. As estatísticas de conclusão por curso,
+            taxa de aproveitamento e acompanhamento detalhado requerem uma conta de aluno.
+          </p>
+          <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-primary px-4 py-2 fw-medium" (click)="irParaLogin()">
+              <i class="bi bi-person-plus me-1"></i> Criar Conta / Entrar para Desbloquear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de métricas - idênticos em estrutura aos cards do dashboard.html Ford -->
+    <div class="row mb-5 justify-content-center" *ngIf="!isGuest">
+
+      <!-- Card Total de Cursos -->
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-light border-bottom-0 text-muted">Total de Cursos</div>
+          <div class="card-body">
+            <h3 class="fw-bold mb-0" style="color: #007bff;">{{ totalCursos }}</h3>
+            <small class="text-info">disponíveis</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Aulas Assistidas -->
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-light border-bottom-0 text-muted">Aulas Assistidas</div>
+          <div class="card-body">
+            <h3 class="fw-bold mb-0" style="color: #007bff;">{{ totalAulasAssistidas }}</h3>
+            <small class="text-info">concluídas</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Cursos em Progresso -->
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-light border-bottom-0 text-muted">Em Progresso</div>
+          <div class="card-body">
+            <h3 class="fw-bold mb-0" style="color: #007bff;">{{ cursosEmProgresso }}</h3>
+            <small class="text-info">cursos iniciados</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Média de Conclusão -->
+      <div class="col-md-3 mb-3">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-light border-bottom-0 text-muted">Média de Conclusão</div>
+          <div class="card-body">
+            <h3 class="fw-bold mb-0" style="color: #007bff;">{{ mediaConclusao }}%</h3>
+            <small class="text-info">geral</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabela de progresso por curso - visível quando autenticado -->
+    <div class="table-responsive" *ngIf="!isGuest">
+      <h4 class="fw-bold mb-3" style="color: var(--cor-primaria);">Progresso Detalhado por Curso</h4>
+      <table class="table table-bordered text-center align-middle">
+        <thead style="background-color: var(--cor-primaria); color: white;">
+          <tr>
+            <th class="py-3 text-white" style="background-color: var(--cor-primaria);">Curso</th>
+            <th class="py-3 text-white" style="background-color: var(--cor-primaria);">Categoria</th>
+            <th class="py-3 text-white" style="background-color: var(--cor-primaria);">Total de Aulas</th>
+            <th class="py-3 text-white" style="background-color: var(--cor-primaria);">Aulas Assistidas</th>
+            <th class="py-3 text-white" style="background-color: var(--cor-primaria);">Progresso</th>
+            <th class="py-3 text-white" style="background-color: var(--cor-primaria);">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let curso of cursos">
+            <td class="text-start fw-medium">{{ curso.titulo }}</td>
+            <td>
+              <span class="badge rounded-pill" style="background-color: var(--cor-secundaria);">{{ curso.categoria }}</span>
+            </td>
+            <td>{{ curso.totalAulas }}</td>
+            <td>{{ getAulasAssistidas(curso.id) }}</td>
+            <td style="min-width: 120px;">
+              <div class="d-flex align-items-center gap-2">
+                <div class="progress flex-grow-1" style="height: 8px;">
+                  <div class="progress-bar" style="background-color: var(--cor-secundaria);"
+                    [style.width.%]="getProgressoCurso(curso.id)"></div>
+                </div>
+                <small class="text-muted">{{ getProgressoCurso(curso.id) }}%</small>
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-success" *ngIf="getProgressoCurso(curso.id) === 100">Concluído</span>
+              <span class="badge bg-warning text-dark" *ngIf="getProgressoCurso(curso.id) > 0 && getProgressoCurso(curso.id) < 100">Em progresso</span>
+              <span class="badge bg-secondary" *ngIf="getProgressoCurso(curso.id) === 0">Não iniciado</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

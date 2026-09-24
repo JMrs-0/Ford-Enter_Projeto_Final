@@ -1,0 +1,118 @@
+/* Login CSS - baseado no projeto Ford Enter, adaptado para EstudoProg com Abas e LGPD */
+
+.banner-login {
+  background: linear-gradient(135deg, var(--cor-primaria, #003478) 0%, var(--cor-secundaria, #1351d8) 100%);
+  min-height: 100vh;
+}
+
+.banner-conteudo {
+  animation: fadeInUp 0.8s ease;
+}
+
+.badge-tech {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+.login-form-container {
+  padding: 1.5rem;
+  animation: fadeInRight 0.8s ease;
+}
+
+.nav-pills .nav-link {
+  color: #555;
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--cor-primaria, #003478);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 52, 120, 0.25);
+}
+
+.btn-principal {
+  background-color: var(--cor-primaria, #003478);
+  border-color: var(--cor-primaria, #003478);
+  padding: 10px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.btn-principal:hover {
+  background-color: var(--cor-secundaria, #1351d8);
+  border-color: var(--cor-secundaria, #1351d8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(19, 81, 216, 0.3);
+}
+
+.btn-visitante {
+  border-color: #ced4da;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-visitante:hover {
+  background-color: #f8f9fa;
+  border-color: var(--cor-secundaria, #1351d8);
+  color: var(--cor-secundaria, #1351d8);
+  transform: translateY(-1px);
+}
+
+.lgpd-box {
+  background-color: #f8f9fa;
+  border-color: #e9ecef !important;
+}
+
+.input-group .form-control:focus {
+  border-color: var(--cor-secundaria, #1351d8);
+  box-shadow: 0 0 0 0.2rem rgba(19, 81, 216, 0.15);
+}
+
+/* Modal Customizado para os Termos da LGPD */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-dialog-custom {
+  width: 100%;
+  max-width: 650px;
+  animation: scaleUp 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}

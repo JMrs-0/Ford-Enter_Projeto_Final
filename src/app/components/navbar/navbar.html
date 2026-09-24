@@ -1,0 +1,125 @@
+<div class="navbar-wrapper">
+
+  <!-- Topbar - estrutura do Angular repo -->
+  <nav class="topbar d-flex justify-content-between align-items-center px-3 px-md-4 py-2">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-link p-0 menu-btn" (click)="toggleSidebar()" title="Abrir menu">
+        <i class="bi bi-list fs-3"></i>
+      </button>
+      <a routerLink="/home" class="brand-link d-flex align-items-center gap-2 text-decoration-none">
+        <i class="bi bi-code-slash"></i>
+        <span class="fw-bold">EstudoProg</span>
+      </a>
+    </div>
+
+    <!-- Status e Ações do Usuário / Visitante -->
+    <div class="d-flex align-items-center gap-2 gap-md-3">
+
+      <!-- Modo Autenticado -->
+      <ng-container *ngIf="!isGuest">
+        <span class="usuario-nome d-none d-md-block">
+          <i class="bi bi-person-circle me-1"></i> Olá, {{ usuario?.nome || 'Usuário' }}!
+        </span>
+        <button class="btn btn-outline-light btn-sm rounded-pill px-3" (click)="logout()">
+          <i class="bi bi-box-arrow-right me-1"></i> Sair
+        </button>
+      </ng-container>
+
+      <!-- Modo Visitante -->
+      <ng-container *ngIf="isGuest">
+        <span class="badge bg-warning text-dark d-none d-md-inline-flex align-items-center gap-1 px-2 py-1">
+          <i class="bi bi-eye"></i> Modo Visitante
+        </span>
+        <button class="btn btn-warning btn-sm rounded-pill fw-bold px-3 text-dark" (click)="irParaLogin()">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Fazer Login
+        </button>
+      </ng-container>
+
+    </div>
+  </nav>
+
+  <!-- Sidebar - baseado no sidebar do Angular repo com adaptações -->
+  <div class="sidebar shadow" [class.open]="isSidebarOpen" (click)="$event.stopPropagation()">
+    <div class="sidebar-header py-4 px-3 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-code-slash fs-2"></i>
+        <span class="fw-bold">EstudoProg</span>
+      </div>
+      <button class="btn btn-sm btn-link text-white d-md-none" (click)="toggleSidebar()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Informações do Usuário no Sidebar -->
+    <div class="p-3 border-bottom border-light border-opacity-10" style="background: rgba(0,0,0,0.15);">
+      <div class="d-flex align-items-center gap-2">
+        <div class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width: 36px; height: 36px; background: rgba(255,255,255,0.2);">
+          <i class="bi" [class.bi-person-fill]="!isGuest" [class.bi-eye-fill]="isGuest"></i>
+        </div>
+        <div>
+          <div class="fw-bold small text-white">{{ usuario?.nome || 'Visitante' }}</div>
+          <small class="text-white-50" style="font-size: 0.75rem;">
+            {{ isGuest ? 'Acesso limitado (Visitante)' : (usuario?.email || 'Conta ativa') }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav flex-column mt-2">
+      <li class="nav-item">
+        <a class="nav-link sidebar-link" routerLink="/home" routerLinkActive="active" (click)="toggleSidebar()">
+          <i class="bi bi-house-door me-2"></i>Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-link" routerLink="/cursos" routerLinkActive="active" (click)="toggleSidebar()">
+          <i class="bi bi-play-circle me-2"></i>Cursos
+          <span class="badge bg-success float-end mt-1" style="font-size: 0.65rem;">Livre</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-link" routerLink="/aulas-assistidas" routerLinkActive="active" (click)="toggleSidebar()">
+          <i class="bi bi-check-circle me-2"></i>Aulas Assistidas
+          <span *ngIf="isGuest" class="badge bg-secondary float-end mt-1" style="font-size: 0.65rem;">
+            <i class="bi bi-lock-fill"></i> Conta
+          </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-link" routerLink="/playlists" routerLinkActive="active" (click)="toggleSidebar()">
+          <i class="bi bi-collection-play me-2"></i>Playlists
+          <span *ngIf="isGuest" class="badge bg-secondary float-end mt-1" style="font-size: 0.65rem;">
+            <i class="bi bi-lock-fill"></i> Conta
+          </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-link" routerLink="/dashboard" routerLinkActive="active" (click)="toggleSidebar()">
+          <i class="bi bi-bar-chart-line me-2"></i>Dashboard
+          <span *ngIf="isGuest" class="badge bg-secondary float-end mt-1" style="font-size: 0.65rem;">
+            <i class="bi bi-lock-fill"></i> Conta
+          </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link sidebar-link" routerLink="/assistente-ia" routerLinkActive="active" (click)="toggleSidebar()">
+          <i class="bi bi-robot me-2"></i>Assistente IA
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer px-3 py-4 mt-auto">
+      <button *ngIf="!isGuest" class="btn btn-outline-light btn-sm w-100" (click)="logout()">
+        <i class="bi bi-box-arrow-right me-2"></i>Sair da Conta
+      </button>
+      <button *ngIf="isGuest" class="btn btn-warning btn-sm w-100 fw-bold text-dark" (click)="irParaLogin()">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Criar Conta / Login
+      </button>
+    </div>
+  </div>
+
+  <!-- Overlay quando sidebar aberto -->
+  <div class="sidebar-overlay" *ngIf="isSidebarOpen" (click)="toggleSidebar()"></div>
+
+</div>

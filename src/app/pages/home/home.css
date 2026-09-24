@@ -1,0 +1,105 @@
+/* Home CSS - baseado nos estilos do Ford Enter HTML-CSS */
+
+.page-content {
+  padding-top: 60px; /* offset para o navbar fixo */
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--cor-primaria, #003478) 0%, var(--cor-secundaria, #1351d8) 100%);
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+}
+
+.hero-overlay {
+  width: 100%;
+  padding: 60px 20px;
+}
+
+.hero-titulo {
+  font-size: 3rem;
+}
+
+.hero-subtitulo {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.btn-hero {
+  background-color: white;
+  color: var(--cor-primaria, #003478);
+  font-weight: 700;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-hero:hover {
+  background-color: var(--cor-texto-claro, aliceblue);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* Cards de estatísticas - baseado nos cards do dashboard.html */
+.stat-card {
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  color: var(--cor-secundaria, #1351d8);
+}
+
+.stat-num {
+  color: var(--cor-primaria, #003478);
+  font-size: 2rem;
+}
+
+/* Cards de cursos */
+.curso-card {
+  transition: transform 0.2s ease;
+}
+
+.curso-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header-curso {
+  background: linear-gradient(135deg, var(--cor-primaria, #003478), var(--cor-secundaria, #1351d8));
+  border-radius: 8px 8px 0 0;
+}
+
+.btn-acessar {
+  background-color: var(--cor-primaria, #003478);
+  border-color: var(--cor-primaria, #003478);
+  transition: all 0.2s ease;
+}
+
+.btn-acessar:hover {
+  background-color: var(--cor-secundaria, #1351d8);
+  border-color: var(--cor-secundaria, #1351d8);
+}
+
+/* Feature icons */
+.feature-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--cor-primaria, #003478), var(--cor-secundaria, #1351d8));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 1.8rem;
+  color: white;
+}
+
+/* Footer - baseado no footer do geral.css */
+.rodape {
+  background-color: var(--cor-rodape, #1b357e);
+  width: 100%;
+}

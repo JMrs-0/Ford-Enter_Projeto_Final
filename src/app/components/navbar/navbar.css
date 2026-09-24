@@ -1,0 +1,90 @@
+/* Navbar CSS - baseado no topbar/sidebar do Ford-Enter_Angular */
+
+.topbar {
+  background-color: var(--cor-primaria, #003478);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 60px;
+}
+
+.menu-btn {
+  color: white !important;
+  font-size: 1.5rem;
+}
+
+.brand-link {
+  color: white !important;
+  font-size: 1.1rem;
+}
+
+.usuario-nome {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+/* Sidebar - baseado no sidebar do Angular repo */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: -280px;
+  width: 280px;
+  height: calc(100vh - 60px);
+  background-color: var(--cor-primaria, #003478);
+  color: white;
+  z-index: 999;
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  padding: 14px 20px;
+  font-size: 0.95rem;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left-color: white;
+}
+
+.sidebar-link.active {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-left: 3px solid white;
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}

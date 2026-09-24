@@ -1,0 +1,64 @@
+.page-content { padding-top: 60px; }
+.ia-header {
+  background: linear-gradient(135deg, #1a0533, #4a0080, var(--cor-secundaria, #1351d8));
+}
+.chat-historico {
+  min-height: 350px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: #f8f9fa;
+}
+.mensagem-balao {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.mensagem-user .mensagem-balao { flex-direction: row-reverse; }
+.mensagem-texto {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 14px;
+  max-width: 80%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.mensagem-user .mensagem-texto {
+  background: var(--cor-primaria, #003478);
+  color: white;
+}
+.mensagem-icone {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--cor-secundaria, #1351d8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.mensagem-user .mensagem-icone { background: var(--cor-primaria, #003478); }
+.btn-enviar {
+  background: var(--cor-primaria, #003478);
+  color: white;
+  border: none;
+  padding: 0 20px;
+}
+.btn-enviar:hover { background: var(--cor-secundaria, #1351d8); color: white; }
+.sugestao-btn:hover { background-color: rgba(0,52,120,0.05); }
+/* Typing indicator */
+.typing-indicator { display: flex; gap: 4px; align-items: center; padding: 6px 10px !important; }
+.typing-indicator span {
+  width: 8px; height: 8px;
+  background: var(--cor-secundaria, #1351d8);
+  border-radius: 50%;
+  animation: typing 1.2s infinite ease-in-out;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40% { transform: scale(1.2); opacity: 1; }
+}

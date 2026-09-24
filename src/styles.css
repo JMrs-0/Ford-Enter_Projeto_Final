@@ -1,0 +1,46 @@
+/* Bootstrap */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.min.css";
+
+/* Variáveis de cores - baseado no projeto Ford Enter */
+:root {
+  --cor-primaria: #003478;
+  --cor-secundaria: #1351d8;
+  --cor-destaque: #007bff;
+  --cor-rodape: #1b357e;
+  --cor-sucesso: #28a745;
+  --cor-texto-claro: aliceblue;
+  --cor-sombra: rgba(0,0,0,0.1);
+  --fonte-padrao: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-family: var(--fonte-padrao);
+}
+
+/* Transições de hover nos links - vindo do geral.css */
+.navegacao a {
+  transition: all 0.1s ease;
+}
+.navegacao a:hover {
+  transform: translateY(-3px);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--cor-primaria);
+  border-radius: 4px;
+}

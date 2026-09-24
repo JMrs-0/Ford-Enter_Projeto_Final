@@ -1,0 +1,267 @@
+<div class="container-fluid vh-100 p-0 m-0 overflow-hidden">
+  <div class="row h-100 m-0">
+
+    <!-- Lado esquerdo com banner visual - baseado no login do Ford-Enter_Angular -->
+    <div class="col-md-5 p-0 d-none d-md-flex flex-column align-items-center justify-content-center banner-login">
+      <div class="banner-conteudo text-center text-white p-4">
+        <i class="bi bi-mortarboard-fill display-2 mb-3"></i>
+        <h1 class="fw-bold mb-2">EstudoProg</h1>
+        <p class="lead mb-4">Sua plataforma completa e gratuita de estudos em tecnologia</p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+          <span class="badge-tech"><i class="bi bi-filetype-html me-1"></i>HTML & CSS</span>
+          <span class="badge-tech"><i class="bi bi-filetype-js me-1"></i>JavaScript</span>
+          <span class="badge-tech"><i class="bi bi-shield-lock me-1"></i>LGPD</span>
+          <span class="badge-tech"><i class="bi bi-layers me-1"></i>Angular</span>
+          <span class="badge-tech"><i class="bi bi-robot me-1"></i>IA</span>
+        </div>
+
+        <div class="banner-vantagens text-start p-3 rounded" style="background: rgba(255,255,255,0.1); max-width: 380px;">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-check2-circle text-success fs-5"></i>
+            <small>Cursos 100% gratuitos com videoaulas integradas</small>
+          </div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-check2-circle text-success fs-5"></i>
+            <small>Acompanhamento de progresso e histórico pessoal</small>
+          </div>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-check2-circle text-success fs-5"></i>
+            <small>Criação de playlists personalizadas de estudo</small>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-check2-circle text-success fs-5"></i>
+            <small>Total conformidade com a LGPD e privacidade</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lado direito (Formulário dinâmico) -->
+    <div class="col-md-7 d-flex flex-column align-items-center justify-content-center bg-white p-3 p-md-4 overflow-auto">
+      <div class="login-form-container w-100" style="max-width: 440px;">
+
+        <!-- Header -->
+        <div class="text-center mb-4">
+          <div class="d-inline-flex p-3 rounded-circle mb-2" style="background: rgba(0,52,120,0.08);">
+            <i class="bi bi-code-slash fs-1" style="color: var(--cor-primaria);"></i>
+          </div>
+          <h2 class="fw-bold mb-1" style="color: var(--cor-primaria);">Portal EstudoProg</h2>
+          <p class="text-muted small">Acesse sua conta ou explore livremente a plataforma</p>
+        </div>
+
+        <!-- Alerta se já houver sessão ativa -->
+        <div *ngIf="usuarioAtual" class="alert alert-primary p-3 mb-3 d-flex align-items-center justify-content-between shadow-sm">
+          <div>
+            <small class="d-block text-muted">Sessão ativa detectada:</small>
+            <strong>{{ usuarioAtual.nome }}</strong>
+            <span *ngIf="usuarioAtual.isGuest" class="badge bg-secondary ms-2">Visitante</span>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-primary" (click)="continuarSessao()">
+              Continuar <i class="bi bi-arrow-right"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="encerrarSessaoAtual()" title="Trocar de conta">
+              <i class="bi bi-box-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Seletor de Abas (Entrar vs Cadastrar-se) -->
+        <div class="nav nav-pills nav-fill mb-3 p-1 rounded-pill bg-light border">
+          <button class="nav-link rounded-pill py-2 fw-medium"
+                  [class.active]="abaAtiva === 'login'"
+                  (click)="trocarAba('login')">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+          </button>
+          <button class="nav-link rounded-pill py-2 fw-medium"
+                  [class.active]="abaAtiva === 'cadastro'"
+                  (click)="trocarAba('cadastro')">
+            <i class="bi bi-person-plus me-1"></i> Criar Conta
+          </button>
+        </div>
+
+        <!-- Mensagens globais de feedback -->
+        <div *ngIf="successMessage" class="alert alert-success p-2 small text-center mb-3">
+          <i class="bi bi-check-circle me-1"></i> {{ successMessage }}
+        </div>
+
+        <!-- ================= ABA 1: LOGIN ================= -->
+        <div *ngIf="abaAtiva === 'login'">
+          <form (ngSubmit)="onSubmitLogin()">
+
+            <div class="mb-3">
+              <label class="form-label small fw-medium text-secondary">Usuário ou E-mail</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-person" style="color: var(--cor-primaria);"></i></span>
+                <input type="text" class="form-control" placeholder="Seu nome de usuário ou e-mail"
+                       [(ngModel)]="identificador" name="identificador" required autocomplete="username">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-medium text-secondary">Senha</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-lock" style="color: var(--cor-primaria);"></i></span>
+                <input type="password" class="form-control" placeholder="Sua senha secreta"
+                       [(ngModel)]="senha" name="senha" required autocomplete="current-password">
+              </div>
+            </div>
+
+            <div *ngIf="errorMessage" class="alert alert-danger p-2 small mb-3">
+              <i class="bi bi-exclamation-triangle me-1"></i> {{ errorMessage }}
+            </div>
+
+            <button type="submit" class="btn w-100 fw-bold text-white btn-principal mb-3">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Entrar na Conta
+            </button>
+          </form>
+
+          <div class="d-flex align-items-center my-3">
+            <hr class="flex-grow-1 my-0 text-muted">
+            <span class="px-2 small text-muted text-uppercase" style="font-size: 0.75rem;">ou</span>
+            <hr class="flex-grow-1 my-0 text-muted">
+          </div>
+
+          <!-- Botão Modo Visitante (Entrar sem login) -->
+          <button type="button" class="btn btn-outline-secondary w-100 py-2 btn-visitante mb-3" (click)="entrarComoVisitante()">
+            <i class="bi bi-eye me-2"></i> Continuar sem Login (Modo Visitante)
+          </button>
+          <p class="text-muted text-center" style="font-size: 0.75rem;">
+            * Visitantes podem assistir aulas gratuitas, mas não salvam histórico ou playlists.
+          </p>
+
+          <div class="p-2 rounded bg-light border text-center mt-3" style="font-size: 0.8rem;">
+            <span class="text-muted">Contas padrão de teste:</span><br>
+            <code>admin / 1234</code> ou <code>usuario / 1234</code>
+          </div>
+        </div>
+
+        <!-- ================= ABA 2: CADASTRO COM LGPD ================= -->
+        <div *ngIf="abaAtiva === 'cadastro'">
+          <form (ngSubmit)="onSubmitCadastro()">
+
+            <div class="mb-2">
+              <label class="form-label small fw-medium text-secondary mb-1">Nome Completo ou Usuário</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white"><i class="bi bi-person text-primary"></i></span>
+                <input type="text" class="form-control" placeholder="Como deseja ser chamado(a)"
+                       [(ngModel)]="novoNome" name="novoNome" required>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label small fw-medium text-secondary mb-1">E-mail</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white"><i class="bi bi-envelope text-primary"></i></span>
+                <input type="email" class="form-control" placeholder="seuemail@exemplo.com"
+                       [(ngModel)]="novoEmail" name="novoEmail" required>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-medium text-secondary mb-1">Crie sua Senha</label>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white"><i class="bi bi-lock text-primary"></i></span>
+                  <input type="password" class="form-control" placeholder="Mínimo 4 dígitos"
+                         [(ngModel)]="novaSenha" name="novaSenha" required>
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-medium text-secondary mb-1">Confirmar Senha</label>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white"><i class="bi bi-lock-fill text-primary"></i></span>
+                  <input type="password" class="form-control" placeholder="Repita a senha"
+                         [(ngModel)]="confirmarSenha" name="confirmarSenha" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Termo de Consentimento LGPD -->
+            <div class="p-3 rounded mb-3 lgpd-box border">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="checkLgpd"
+                       [(ngModel)]="concordaLgpd" name="concordaLgpd" required>
+                <label class="form-check-label small" for="checkLgpd">
+                  Li e concordo com a coleta do meu nome e e-mail para acesso aos cursos e registros de aulas, conforme a
+                  <strong>Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)</strong>.
+                </label>
+              </div>
+              <div class="mt-2 text-end">
+                <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none" (click)="abrirModalLgpd()">
+                  <i class="bi bi-shield-check me-1"></i>Ler Termos da LGPD
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="cadastroErrorMessage" class="alert alert-danger p-2 small mb-3">
+              <i class="bi bi-exclamation-triangle me-1"></i> {{ cadastroErrorMessage }}
+            </div>
+
+            <button type="submit" class="btn w-100 fw-bold text-white btn-principal mb-2">
+              <i class="bi bi-check-lg me-1"></i> Criar Conta e Entrar
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <button type="button" class="btn btn-link btn-sm text-secondary text-decoration-none" (click)="entrarComoVisitante()">
+              Prefere navegar agora? <strong style="color: var(--cor-primaria);">Entrar como Visitante</strong>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= MODAL LGPD ================= -->
+<div class="modal-backdrop-custom" *ngIf="modalLgpdAberto" (click)="fecharModalLgpd()">
+  <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+    <div class="card shadow-lg border-0">
+      <div class="card-header text-white d-flex justify-content-between align-items-center py-3" style="background: var(--cor-primaria);">
+        <h5 class="modal-title mb-0 d-flex align-items-center gap-2">
+          <i class="bi bi-shield-lock-fill"></i> Termos de Uso e Privacidade (LGPD)
+        </h5>
+        <button type="button" class="btn btn-sm btn-close btn-close-white" (click)="fecharModalLgpd()"></button>
+      </div>
+      <div class="card-body p-4" style="max-height: 60vh; overflow-y: auto;">
+        <h6 class="fw-bold text-primary mb-2">Compromisso com a Lei nº 13.709/2018 (LGPD)</h6>
+        <p class="small text-muted">
+          Na plataforma <strong>EstudoProg</strong>, respeitamos a sua privacidade e garantimos que seus dados pessoais
+          são tratados com segurança, transparência e estrita conformidade com os princípios da LGPD:
+        </p>
+
+        <div class="list-group list-group-flush small mb-3">
+          <div class="list-group-item px-0">
+            <strong>1. Finalidade Específica:</strong> Seus dados (nome e e-mail) são utilizados exclusivamente para identificar seu usuário, autenticar sua sessão e manter o progresso das suas aulas e playlists de estudo.
+          </div>
+          <div class="list-group-item px-0">
+            <strong>2. Consentimento Livre e Expresso:</strong> O cadastro só é efetivado mediante sua autorização explícita e voluntária.
+          </div>
+          <div class="list-group-item px-0">
+            <strong>3. Não Compartilhamento:</strong> Seus dados jamais serão comercializados ou cedidos a terceiros para fins de marketing ou publicidade.
+          </div>
+          <div class="list-group-item px-0">
+            <strong>4. Segurança e Armazenamento:</strong> Seus dados são salvos de forma segura em seu próprio navegador (armazenamento local) e você tem controle pleno sobre eles.
+          </div>
+          <div class="list-group-item px-0">
+            <strong>5. Direitos do Titular (Art. 18):</strong> Você tem direito a confirmar o tratamento, acessar seus dados e solicitar a exclusão de sua conta a qualquer momento na opção de logout.
+          </div>
+        </div>
+
+        <div class="p-3 bg-light rounded small">
+          Ao prosseguir, você confirma que compreendeu estas diretrizes e autoriza o uso dos dados informados para sua experiência de estudos na plataforma.
+        </div>
+      </div>
+      <div class="card-footer bg-light d-flex justify-content-end gap-2 py-3">
+        <button type="button" class="btn btn-secondary btn-sm px-3" (click)="fecharModalLgpd()">Fechar</button>
+        <button type="button" class="btn btn-primary btn-sm px-3" (click)="aceitarLgpdEFechar()">
+          <i class="bi bi-check2 me-1"></i> Concordar e Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

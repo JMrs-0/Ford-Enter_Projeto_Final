@@ -1,0 +1,5 @@
+/* Dashboard CSS - baseado no dashboard.css do Ford-Enter_Angular */
+.page-content { padding-top: 60px; }
+.dashboard-wrapper { min-height: 100vh; }
+.table thead th { background-color: var(--cor-primaria, #003478) !important; }
+.progress-bar { background-color: var(--cor-secundaria, #1351d8) !important; }

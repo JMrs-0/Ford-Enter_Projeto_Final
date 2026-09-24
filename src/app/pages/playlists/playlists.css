@@ -1,0 +1,33 @@
+.page-content { padding-top: 60px; }
+.playlists-header {
+  background: linear-gradient(135deg, #1a3a6b, var(--cor-secundaria, #1351d8));
+}
+.btn-criar {
+  background-color: var(--cor-primaria, #003478);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.btn-criar:hover {
+  background-color: var(--cor-secundaria, #1351d8);
+  color: white;
+  transform: translateY(-1px);
+}
+.playlist-card { transition: transform 0.2s ease; }
+.playlist-card:hover { transform: translateY(-4px); }
+.playlist-header {
+  background: linear-gradient(135deg, var(--cor-primaria, #003478), var(--cor-secundaria, #1351d8));
+  border-radius: 8px 8px 0 0 !important;
+}
+.curso-check {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.curso-check:hover { border-color: var(--cor-secundaria, #1351d8) !important; }
+.curso-selecionado {
+  border-color: var(--cor-primaria, #003478) !important;
+  background-color: rgba(0, 52, 120, 0.07);
+}
+.curso-selecionado .bi-check-circle-fill { color: var(--cor-primaria, #003478); }

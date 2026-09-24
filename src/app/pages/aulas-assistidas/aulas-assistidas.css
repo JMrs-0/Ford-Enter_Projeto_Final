@@ -1,0 +1,5 @@
+.page-content { padding-top: 60px; }
+.aulas-header {
+  background: linear-gradient(135deg, var(--cor-primaria, #003478), #1a5276);
+}
+.table thead th { background-color: var(--cor-primaria, #003478) !important; }

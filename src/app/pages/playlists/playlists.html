@@ -1,0 +1,140 @@
+<app-navbar></app-navbar>
+
+<div class="page-content">
+  <div class="playlists-header py-5 text-white text-center">
+    <h2 class="fw-bold mb-2"><i class="bi bi-collection-play me-2"></i>Playlists de Estudo</h2>
+    <p class="lead opacity-90">Crie e gerencie suas trilhas de aprendizado personalizadas</p>
+  </div>
+
+  <div class="container py-4">
+
+    <!-- BLOQUEIO PARA VISITANTE -->
+    <div *ngIf="isGuest" class="row justify-content-center py-5">
+      <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm text-center p-4 p-md-5">
+          <div class="mb-3">
+            <span class="d-inline-flex p-3 rounded-circle bg-warning bg-opacity-25 text-warning">
+              <i class="bi bi-lock-fill display-5 text-dark"></i>
+            </span>
+          </div>
+          <h4 class="fw-bold mb-2 text-dark">Recurso Exclusivo para Alunos Cadastrados</h4>
+          <p class="text-muted small mb-4">
+            Como <strong>Visitante</strong>, suas playlists não teriam onde ficar salvas.
+            Crie sua conta gratuita em poucos segundos para montar quantas trilhas personalizadas de estudo quiser!
+          </p>
+          <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-primary px-4 py-2 fw-medium" (click)="irParaLogin()">
+              <i class="bi bi-person-plus me-1"></i> Fazer Login ou Cadastrar-se
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO PARA USUÁRIOS AUTENTICADOS -->
+    <div *ngIf="!isGuest">
+
+      <!-- Botão criar playlist -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0" style="color: var(--cor-primaria);">Minhas Trilhas Personalizadas</h4>
+        <button class="btn btn-criar" (click)="toggleFormulario()">
+          <i class="bi" [class.bi-plus-circle]="!mostrarFormulario" [class.bi-x-circle]="mostrarFormulario"></i>
+          {{ mostrarFormulario ? 'Cancelar' : 'Nova Playlist' }}
+        </button>
+      </div>
+
+      <!-- Formulário de criação/edição - two-way binding como no Angular repo login -->
+      <div class="card border-0 shadow-sm mb-5" *ngIf="mostrarFormulario">
+        <div class="card-header fw-bold py-3" style="background: var(--cor-primaria); color: white;">
+          <i class="bi bi-collection-play me-2"></i>
+          {{ playlistEdicaoId ? 'Editar Playlist' : 'Nova Trilha de Estudo' }}
+        </div>
+        <div class="card-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-medium">Nome da Playlist</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-collection-play" style="color: var(--cor-primaria);"></i></span>
+              <input type="text" class="form-control" placeholder="Ex: Trilha Front-end Avançada"
+                     [(ngModel)]="novoNome">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">Descrição (opcional)</label>
+            <textarea class="form-control" rows="2" placeholder="Descreva os objetivos desta trilha de aprendizagem"
+                      [(ngModel)]="novaDescricao"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-medium">Selecione os Cursos desta Trilha</label>
+            <div class="row g-2">
+              <div class="col-md-4" *ngFor="let curso of cursos">
+                <div class="card curso-check border"
+                  [class.curso-selecionado]="isCursoSelecionado(curso.id)"
+                  (click)="toggleCurso(curso.id)">
+                  <div class="card-body py-2 px-3 d-flex align-items-center gap-2">
+                    <i class="bi" [class.bi-check-circle-fill]="isCursoSelecionado(curso.id)"
+                       [class.bi-circle]="!isCursoSelecionado(curso.id)"
+                       style="font-size: 1.1rem;"></i>
+                    <span class="small fw-medium">{{ curso.titulo }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-danger p-2 small" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <button class="btn btn-criar px-4 py-2" (click)="salvarPlaylist()">
+            <i class="bi bi-save me-1"></i>{{ playlistEdicaoId ? 'Salvar Alterações' : 'Salvar Trilha' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de playlists -->
+      <div *ngIf="playlists.length === 0 && !mostrarFormulario" class="text-center py-5">
+        <i class="bi bi-collection display-1 text-muted"></i>
+        <h4 class="mt-3 text-muted">Nenhuma playlist criada ainda</h4>
+        <p class="text-muted">Clique em <strong>Nova Playlist</strong> para criar sua primeira trilha de estudos!</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4" *ngFor="let playlist of playlists">
+          <div class="card playlist-card border-0 shadow-sm h-100">
+            <div class="card-header playlist-header p-3">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="fw-bold mb-1 text-white">{{ playlist.nome }}</h5>
+                  <small class="opacity-75 text-white">
+                    <i class="bi bi-calendar3 me-1"></i>{{ playlist.dataCriacao }}
+                  </small>
+                </div>
+                <div class="d-flex gap-1">
+                  <button class="btn btn-sm btn-outline-light" (click)="editarPlaylist(playlist)" title="Editar">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-light text-danger bg-white" (click)="excluirPlaylist(playlist.id)" title="Excluir">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-3">
+              <p class="text-muted small mb-3" *ngIf="playlist.descricao">{{ playlist.descricao }}</p>
+              <p class="text-muted small mb-3" *ngIf="!playlist.descricao"><em>Sem descrição</em></p>
+
+              <h6 class="fw-bold small text-muted mb-2">CURSOS NESTA TRILHA ({{ playlist.cursos.length }})</h6>
+              <div class="d-flex flex-wrap gap-1">
+                <span class="badge rounded-pill"
+                  style="background: var(--cor-secundaria); font-size: 0.75rem;"
+                  *ngFor="let cursoId of playlist.cursos">
+                  {{ getNomeCurso(cursoId) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

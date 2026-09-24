@@ -1,0 +1,205 @@
+<app-navbar></app-navbar>
+
+<div class="page-content">
+
+  <!-- Visualizador de Aula -->
+  <div *ngIf="cursoSelecionado && aulaSelecionadaId">
+    <div class="video-player-wrapper">
+      <div class="container-fluid">
+        <button class="btn btn-outline-light btn-sm mb-3" (click)="voltarParaCursos()">
+          <i class="bi bi-arrow-left me-1"></i>Voltar aos Cursos
+        </button>
+
+        <!-- Alerta de Visitante ao tentar marcar como assistida -->
+        <div *ngIf="alertaVisitante" class="alert alert-warning d-flex align-items-center justify-content-between p-3 mb-3 border-0 shadow">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-lock-fill fs-5 text-dark"></i>
+            <span class="text-dark">{{ alertaVisitante }}</span>
+          </div>
+          <button class="btn btn-sm btn-primary fw-medium" (click)="irParaLogin()">
+            <i class="bi bi-person-plus me-1"></i> Criar Conta / Entrar
+          </button>
+        </div>
+
+        <div class="row g-4">
+          <!-- Player de vídeo -->
+          <div class="col-lg-8">
+            <div class="video-container ratio ratio-16x9 rounded overflow-hidden shadow">
+              <iframe *ngIf="getAulaAtual()"
+                [src]="getAulaAtual()!.urlVideo | safeUrl"
+                title="{{ getAulaAtual()?.titulo }}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
+
+            <!-- Info da aula -->
+            <div *ngIf="getAulaAtual()" class="mt-3">
+              <h4 class="fw-bold">{{ getAulaAtual()?.titulo }}</h4>
+              <p class="text-muted">{{ getAulaAtual()?.descricao }}</p>
+
+              <!-- Botão marcar assistida -->
+              <div class="d-flex align-items-center gap-3 mt-3">
+                <button class="btn btn-success"
+                  *ngIf="!isAssistida(cursoSelecionado!.id, aulaSelecionadaId!)"
+                  (click)="marcarAssistida(cursoSelecionado!.id, aulaSelecionadaId!)">
+                  <i class="bi bi-check-circle me-1"></i>Marcar como Assistida
+                </button>
+                <span class="badge bg-success fs-6 p-2" *ngIf="isAssistida(cursoSelecionado!.id, aulaSelecionadaId!)">
+                  <i class="bi bi-check-circle-fill me-1"></i>Aula Concluída!
+                </span>
+                <small *ngIf="isGuest" class="text-white-50">
+                  <i class="bi bi-info-circle me-1"></i>Modo Visitante: você pode assistir gratuitamente!
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de aulas do curso -->
+          <div class="col-lg-4">
+            <div class="aulas-lista card border-0 shadow-sm">
+              <div class="card-header fw-bold" style="background: var(--cor-primaria); color: white;">
+                <i class="bi bi-list-ul me-2"></i>{{ cursoSelecionado.titulo }}
+                <div class="mt-1" *ngIf="!isGuest">
+                  <small class="opacity-75">Progresso: {{ getProgresso(cursoSelecionado.id) }}%</small>
+                  <div class="progress mt-1" style="height: 4px;">
+                    <div class="progress-bar bg-warning" [style.width.%]="getProgresso(cursoSelecionado.id)"></div>
+                  </div>
+                </div>
+                <div class="mt-1" *ngIf="isGuest">
+                  <small class="text-warning"><i class="bi bi-eye me-1"></i>Visualização Livre de Aulas</small>
+                </div>
+              </div>
+              <div class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
+                <button *ngFor="let aula of cursoSelecionado.aulas; let i = index"
+                  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center aula-item"
+                  [class.active-aula]="aula.id == aulaSelecionadaId"
+                  [class.assistida]="isAssistida(cursoSelecionado.id, aula.id)"
+                  (click)="selecionarAula(aula.id)">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="aula-num">{{ i + 1 }}</span>
+                    <div>
+                      <div class="fw-medium small">{{ aula.titulo }}</div>
+                      <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i>{{ aula.duracao }}</div>
+                    </div>
+                  </div>
+                  <i class="bi bi-check-circle-fill text-success" *ngIf="isAssistida(cursoSelecionado.id, aula.id)"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Catálogo de cursos -->
+  <div *ngIf="!cursoSelecionado || !aulaSelecionadaId">
+
+    <!-- Header da página -->
+    <div class="cursos-header py-5 text-white text-center">
+      <h2 class="fw-bold mb-2"><i class="bi bi-play-circle me-2"></i>Cursos Disponíveis</h2>
+      <p class="lead opacity-90 mb-2">Todo o conteúdo gratuito para você aprender e dominar a programação</p>
+
+      <!-- Banner de visitante amigável no topo dos cursos -->
+      <div *ngIf="isGuest" class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white text-dark small mt-2 shadow-sm">
+        <i class="bi bi-eye-fill text-warning"></i>
+        <span>Navegando como <strong>Visitante</strong>. Aulas 100% liberadas! Para salvar progresso, crie sua conta.</span>
+        <button class="btn btn-sm btn-primary py-0 px-2 rounded-pill ms-2" (click)="irParaLogin()">Cadastrar</button>
+      </div>
+    </div>
+
+    <div class="container py-4">
+
+      <!-- Filtros de categoria -->
+      <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center">
+        <button *ngFor="let cat of categorias"
+          class="btn btn-filtro rounded-pill"
+          [class.btn-ativo]="filtroCategoria === cat"
+          [class.btn-outline-primary]="filtroCategoria !== cat"
+          (click)="filtrar(cat)">
+          {{ cat }}
+        </button>
+      </div>
+
+      <!-- Grade de cursos -->
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4" *ngFor="let curso of cursosFiltrados">
+          <div class="card curso-card h-100 border-0 shadow-sm">
+            <div class="curso-card-header text-white text-center py-4">
+              <i class="bi bi-code-square display-4"></i>
+              <div class="mt-2">
+                <span class="badge bg-white" style="color: var(--cor-primaria);">{{ curso.nivel }}</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="fw-bold mb-0">{{ curso.titulo }}</h5>
+                <span class="badge rounded-pill" style="background: var(--cor-secundaria); font-size: 0.7rem;">{{ curso.categoria }}</span>
+              </div>
+              <p class="text-muted small">{{ curso.descricao }}</p>
+
+              <!-- Barra de progresso (para logados) -->
+              <div class="mt-3 mb-2" *ngIf="!isGuest">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                  <span>Progresso</span>
+                  <span>{{ getProgresso(curso.id) }}%</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar" style="background-color: var(--cor-secundaria);"
+                    [style.width.%]="getProgresso(curso.id)"></div>
+                </div>
+              </div>
+
+              <!-- Indicador para visitante -->
+              <div class="mt-3 mb-2 small text-muted" *ngIf="isGuest">
+                <i class="bi bi-unlock-fill text-success me-1"></i> Acesso livre a todas as aulas
+              </div>
+
+              <div class="d-flex justify-content-between text-muted small mt-3">
+                <span><i class="bi bi-play-circle me-1"></i>{{ curso.totalAulas }} aulas</span>
+                <span><i class="bi bi-clock me-1"></i>{{ curso.cargaHoraria }}</span>
+              </div>
+            </div>
+            <div class="card-footer border-0 bg-transparent pb-3">
+              <button class="btn btn-curso w-100" (click)="selecionarCurso(curso)">
+                <i class="bi bi-play-fill me-1"></i>Acessar Curso
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Seleção de aula (quando curso selecionado mas sem aula) -->
+  <div *ngIf="cursoSelecionado && !aulaSelecionadaId">
+    <div class="container py-4">
+      <button class="btn btn-outline-secondary mb-3" (click)="voltarParaCursos()">
+        <i class="bi bi-arrow-left me-1"></i>Voltar aos Cursos
+      </button>
+      <h3 class="fw-bold mb-1" style="color: var(--cor-primaria);">{{ cursoSelecionado.titulo }}</h3>
+      <p class="text-muted mb-4">{{ cursoSelecionado.descricao }}</p>
+
+      <div class="row g-3">
+        <div class="col-md-6" *ngFor="let aula of cursoSelecionado.aulas; let i = index">
+          <div class="card aula-selecao-card border-0 shadow-sm p-3"
+            [class.aula-concluida]="isAssistida(cursoSelecionado.id, aula.id)"
+            (click)="selecionarAula(aula.id)">
+            <div class="d-flex align-items-center gap-3">
+              <div class="aula-numero">{{ i + 1 }}</div>
+              <div class="flex-grow-1">
+                <div class="fw-medium">{{ aula.titulo }}</div>
+                <div class="text-muted small"><i class="bi bi-clock me-1"></i>{{ aula.duracao }}</div>
+              </div>
+              <i class="bi bi-check-circle-fill text-success fs-4" *ngIf="isAssistida(cursoSelecionado.id, aula.id)"></i>
+              <i class="bi bi-play-circle fs-4" style="color: var(--cor-secundaria);" *ngIf="!isAssistida(cursoSelecionado.id, aula.id)"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

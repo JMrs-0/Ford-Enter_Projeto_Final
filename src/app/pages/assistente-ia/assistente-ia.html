@@ -1,0 +1,124 @@
+<app-navbar></app-navbar>
+
+<div class="page-content">
+  <div class="ia-header py-4 text-white text-center">
+    <h2 class="fw-bold mb-1"><i class="bi bi-robot me-2"></i>Assistente IA de Estudos</h2>
+    <p class="lead opacity-90 mb-0">Tire suas dúvidas sobre programação, códigos e conceitos</p>
+  </div>
+
+  <div class="container py-4">
+    <div class="row g-4">
+
+      <!-- Chat Principal -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100 d-flex flex-column">
+          <div class="card-header py-3 d-flex align-items-center justify-content-between" style="background: var(--cor-primaria); color: white;">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-chat-dots fs-5"></i>
+              <span class="fw-bold">Chat com o Assistente de Estudos</span>
+            </div>
+            <span class="badge bg-success"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>Online</span>
+          </div>
+
+          <!-- Histórico de mensagens -->
+          <div class="chat-historico p-3 flex-grow-1">
+            <div *ngFor="let msg of historico"
+              class="mensagem mb-3"
+              [class.mensagem-user]="msg.autor === 'user'"
+              [class.mensagem-ia]="msg.autor === 'ia'">
+              <div class="mensagem-balao">
+                <div class="mensagem-icone" *ngIf="msg.autor === 'ia'">
+                  <i class="bi bi-robot"></i>
+                </div>
+                <div class="mensagem-texto">{{ msg.texto }}</div>
+                <div class="mensagem-icone" *ngIf="msg.autor === 'user'">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador de aguardando -->
+            <div class="mensagem mensagem-ia mb-3" *ngIf="aguardando">
+              <div class="mensagem-balao">
+                <div class="mensagem-icone"><i class="bi bi-robot"></i></div>
+                <div class="mensagem-texto typing-indicator">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input do Chat -->
+          <div class="card-footer bg-white border-top p-3">
+            <div class="input-group">
+              <input type="text" class="form-control"
+                placeholder="Digite sua dúvida sobre programação ou escolha ao lado..."
+                [(ngModel)]="mensagemUsuario"
+                (keyup.enter)="enviarMensagem()">
+              <button class="btn btn-enviar" (click)="enviarMensagem()" [disabled]="aguardando || !mensagemUsuario.trim()">
+                <i class="bi bi-send-fill me-1"></i> Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel Lateral -->
+      <div class="col-lg-4">
+
+        <!-- Sugestões de Perguntas -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header py-3" style="background: var(--cor-primaria); color: white;">
+            <i class="bi bi-lightbulb me-2 text-warning"></i>
+            <span class="fw-bold">Sugestões de Perguntas</span>
+          </div>
+          <div class="card-body p-2">
+            <div class="list-group list-group-flush">
+              <button *ngFor="let sug of sugestoes"
+                class="list-group-item list-group-item-action text-start small sugestao-btn border-0 rounded my-1"
+                (click)="usarSugestao(sug)">
+                <i class="bi bi-question-circle me-2" style="color: var(--cor-secundaria);"></i>
+                {{ sug }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card de Dicas de Estudo -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header py-3" style="background: #004b99; color: white;">
+            <i class="bi bi-compass me-2"></i>
+            <span class="fw-bold">Tópicos do Assistente</span>
+          </div>
+          <div class="card-body small">
+            <p class="text-muted mb-3">O assistente responde dúvidas relacionadas aos módulos da formação:</p>
+            <div class="d-flex flex-column gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span><strong>HTML & CSS:</strong> Tags, Box Model, Flexbox e Grid</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span><strong>JavaScript:</strong> Variáveis, Arrow Functions, DOM e Async</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span><strong>LGPD:</strong> Privacidade, consentimento e segurança</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span><strong>Angular:</strong> Componentes, Rotas, Guards e Serviços</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success"></i>
+                <span><strong>Git:</strong> Commits, branches e versionamento</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
