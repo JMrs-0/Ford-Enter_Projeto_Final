@@ -2,8 +2,9 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 
-// Auth Guard - baseado no repositório Ford-Enter_Angular/guards/auth.guard.ts
-export const authGuard: CanActivateFn = () => {
+// Auth Guard - Protege as páginas internas.
+// Se o usuário não estiver logado (nem como visitante), redireciona para /login
+export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -11,6 +12,7 @@ export const authGuard: CanActivateFn = () => {
     return true;
   }
 
-  router.navigate(['/login']);
+  // Redireciona para login guardando a página que ele tentou acessar
+  router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
 };

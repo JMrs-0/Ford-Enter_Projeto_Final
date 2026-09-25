@@ -4,8 +4,7 @@ import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth';
 import { Usuario } from '../../models/usuario.model';
 
-// Navbar Component - baseado no topbar/sidebar do projeto Angular Ford Enter
-// Atualizado com suporte ao Modo Visitante e navegação dinâmica
+// Navbar Component - Suporta usuário deslogado, visitante e autenticado
 @Component({
   selector: 'app-navbar',
   imports: [RouterLink, RouterLinkActive, NgIf],
@@ -15,11 +14,13 @@ import { Usuario } from '../../models/usuario.model';
 export class Navbar implements OnInit {
   isSidebarOpen = false;
   usuario: Usuario | null = null;
+  isLoggedIn = false;
   isGuest = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
+    this.isLoggedIn = this.authService.isLoggedIn();
     this.usuario = this.authService.getUsuarioAtual();
     this.isGuest = this.authService.isGuest();
   }
@@ -30,11 +31,13 @@ export class Navbar implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.isLoggedIn = false;
+    this.usuario = null;
+    this.isGuest = false;
+    this.router.navigate(['/home']);
   }
 
   irParaLogin() {
-    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

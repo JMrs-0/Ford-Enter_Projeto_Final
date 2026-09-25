@@ -41,13 +41,28 @@
     <div class="col-md-7 d-flex flex-column align-items-center justify-content-center bg-white p-3 p-md-4 overflow-auto">
       <div class="login-form-container w-100" style="max-width: 440px;">
 
+        <!-- Botão para voltar para Home -->
+        <div class="mb-2">
+          <button type="button" class="btn btn-link text-decoration-none text-muted p-0 small" (click)="voltarParaHome()">
+            <i class="bi bi-arrow-left me-1"></i> Voltar para a Página Inicial
+          </button>
+        </div>
+
         <!-- Header -->
-        <div class="text-center mb-4">
+        <div class="text-center mb-3">
           <div class="d-inline-flex p-3 rounded-circle mb-2" style="background: rgba(0,52,120,0.08);">
             <i class="bi bi-code-slash fs-1" style="color: var(--cor-primaria);"></i>
           </div>
           <h2 class="fw-bold mb-1" style="color: var(--cor-primaria);">Portal EstudoProg</h2>
           <p class="text-muted small">Acesse sua conta ou explore livremente a plataforma</p>
+        </div>
+
+        <!-- Aviso se veio redirecionado ao tentar acessar página restrita -->
+        <div *ngIf="exibirAvisoAcesso" class="alert alert-warning p-2 small mb-3 d-flex align-items-center gap-2 shadow-sm">
+          <i class="bi bi-shield-lock-fill text-dark fs-5"></i>
+          <div>
+            <strong>Acesso Restrito:</strong> Faça login com sua conta ou continue como visitante para prosseguir.
+          </div>
         </div>
 
         <!-- Alerta se já houver sessão ativa -->

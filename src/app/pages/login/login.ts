@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Usuario } from '../../models/usuario.model';
 
@@ -16,6 +16,8 @@ export class Login implements OnInit {
 
   abaAtiva: 'login' | 'cadastro' = 'login';
   usuarioAtual: Usuario | null = null;
+  returnUrl = '/home';
+  exibirAvisoAcesso = false;
 
   // Campos de Login
   identificador = '';
@@ -34,10 +36,21 @@ export class Login implements OnInit {
   // Modal LGPD
   modalLgpdAberto = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.usuarioAtual = this.authService.getUsuarioAtual();
+
+    // Captura a URL que o usuário tentou acessar antes do redirecionamento
+    const queryReturn = this.route.snapshot.queryParams['returnUrl'];
+    if (queryReturn && queryReturn !== '/' && queryReturn !== '/home') {
+      this.returnUrl = queryReturn;
+      this.exibirAvisoAcesso = true;
+    }
   }
 
   trocarAba(aba: 'login' | 'cadastro') {
@@ -59,7 +72,7 @@ export class Login implements OnInit {
 
     this.authService.login(this.identificador, this.senha).subscribe({
       next: (user) => {
-        this.router.navigate(['/home']);
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (err) => {
         this.errorMessage = err.message || 'Usuário ou senha inválidos.';
@@ -101,7 +114,7 @@ export class Login implements OnInit {
       next: (user) => {
         this.successMessage = `Conta criada com sucesso! Bem-vindo(a), ${user.nome}!`;
         setTimeout(() => {
-          this.router.navigate(['/home']);
+          this.router.navigateByUrl(this.returnUrl);
         }, 1000);
       },
       error: (err) => {
@@ -114,18 +127,22 @@ export class Login implements OnInit {
   entrarComoVisitante() {
     this.authService.loginAsGuest().subscribe({
       next: () => {
-        this.router.navigate(['/home']);
+        this.router.navigateByUrl(this.returnUrl);
       }
     });
   }
 
   continuarSessao() {
-    this.router.navigate(['/home']);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   encerrarSessaoAtual() {
     this.authService.logout();
     this.usuarioAtual = null;
+  }
+
+  voltarParaHome() {
+    this.router.navigate(['/home']);
   }
 
   abrirModalLgpd() {

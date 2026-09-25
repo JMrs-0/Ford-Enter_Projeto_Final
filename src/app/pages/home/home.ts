@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth';
 import { CursoService } from '../../services/curso';
 import { Navbar } from '../../components/navbar/navbar';
 
-// Home Component - baseado no home.ts do Ford-Enter_Angular
+// Home Component - Página inicial pública da plataforma
 @Component({
   selector: 'app-home',
   imports: [NgFor, NgIf, RouterLink, Navbar],
@@ -18,6 +18,7 @@ export class Home implements OnInit {
   totalCursos = 0;
   totalAulasAssistidas = 0;
   cursosDestaque: any[] = [];
+  isLoggedIn = false;
   isGuest = false;
 
   constructor(
@@ -27,20 +28,18 @@ export class Home implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
+    this.isLoggedIn = this.authService.isLoggedIn();
     this.isGuest = this.authService.isGuest();
+
     const cursos = this.cursoService.getCursos();
     this.totalCursos = cursos.length;
-    this.totalAulasAssistidas = this.authService.isGuest() ? 0 : this.cursoService.getTotalAulasAssistidas();
+    this.totalAulasAssistidas = (this.isLoggedIn && !this.isGuest)
+      ? this.cursoService.getTotalAulasAssistidas()
+      : 0;
     this.cursosDestaque = cursos.slice(0, 3);
   }
 
   irParaLogin() {
-    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
