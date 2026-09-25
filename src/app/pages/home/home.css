@@ -98,8 +98,91 @@
   color: white;
 }
 
-/* Footer - baseado no footer do geral.css */
+/* Footer - baseado no footer do geral.css com visual moderno e responsivo */
 .rodape {
-  background-color: var(--cor-rodape, #1b357e);
+  background: linear-gradient(180deg, #0a1c44 0%, #050d24 100%);
+  border-top: 3px solid var(--cor-secundaria, #1351d8);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
   width: 100%;
+  color: #e2e8f0;
+}
+
+.footer-logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--cor-secundaria, #1351d8), #00d2ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(19, 81, 216, 0.35);
+}
+
+.lgpd-badge {
+  background: rgba(40, 167, 69, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 20px;
+}
+
+.footer-links .footer-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footer-links .footer-link:hover {
+  color: white;
+  transform: translateX(4px);
+}
+
+/* Botões sociais circulares com efeito hover */
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: white !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-btn:hover {
+  background: var(--cor-secundaria, #1351d8);
+  border-color: #00d2ff;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(19, 81, 216, 0.45);
+}
+
+.footer-divider {
+  border-color: rgba(255, 255, 255, 0.12);
+  opacity: 1;
+}
+
+/* Ajustes de responsividade para dispositivos móveis */
+@media (max-width: 767.98px) {
+  .rodape {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .footer-links .footer-link:hover {
+    transform: none;
+  }
+
+  #Redes {
+    justify-content: center !important;
+  }
+
+  .social-btn {
+    width: 44px;
+    height: 44px;
+  }
 }
